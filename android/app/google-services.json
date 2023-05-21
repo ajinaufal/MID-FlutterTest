@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "716961196885",
+    "project_id": "mid-fluttertest",
+    "storage_bucket": "mid-fluttertest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716961196885:android:1d0a9a61178ed890d2dddc",
+        "android_client_info": {
+          "package_name": "com.example.quiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716961196885-omj0ldqjj0aq2ibobmgreuei0b32vikh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGv3txGdvNlHfbrN2WDSmesUmBiGDSVxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716961196885-omj0ldqjj0aq2ibobmgreuei0b32vikh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "716961196885-pkliobee677a6fdfvr4nahfk7oo5j8dv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quiz.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716961196885:android:9c3fe93de45aea43d2dddc",
+        "android_client_info": {
+          "package_name": "com.quiz.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716961196885-omj0ldqjj0aq2ibobmgreuei0b32vikh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGv3txGdvNlHfbrN2WDSmesUmBiGDSVxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716961196885-omj0ldqjj0aq2ibobmgreuei0b32vikh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "716961196885-pkliobee677a6fdfvr4nahfk7oo5j8dv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quiz.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

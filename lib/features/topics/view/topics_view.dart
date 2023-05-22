@@ -1,28 +1,33 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:developer' as dev;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quiz/core/arguments/quiz_argument.dart';
-import 'package:quiz/core/data/models/response/quiz_model.dart';
-import 'package:quiz/core/data/models/response/topic_model.dart';
+import 'package:quiz/core/notifier/quiz/quiz_notifier.dart';
 import 'package:quiz/core/router/router_constant.dart';
 import 'package:quiz/core/theme/app_color.dart';
+import 'package:quiz/features/topics/provider/notifier/topic_notifier.dart';
 
-class TopicsView extends ConsumerStatefulWidget {
-  const TopicsView({super.key});
+class TopicView extends ConsumerStatefulWidget {
+  const TopicView({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TopicsViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TopicViewState();
 }
 
-class _TopicsViewState extends ConsumerState<TopicsView> {
+class _TopicViewState extends ConsumerState<TopicView> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(topicNotifierProvider.notifier).getTopicDetail();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final stateTopic = ref.watch(topicNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -45,83 +50,51 @@ class _TopicsViewState extends ConsumerState<TopicsView> {
         ),
         centerTitle: true,
       ),
-      body: StreamBuilder<QuerySnapshot<TopicModel>>(
-          stream: FirebaseFirestore.instance
-              .collection('topic')
-              .withConverter(
-                fromFirestore: (snapshot, options) =>
-                    TopicModel.fromJson(snapshot.data()!),
-                toFirestore: (topic, _) => topic.toJson(),
-              )
-              .snapshots(),
-          builder: (context, snapshotTopic) {
-            final document = snapshotTopic.data?.docs ?? [];
-            return ListView.separated(
-              shrinkWrap: true,
-              padding: EdgeInsets.all(16.r),
-              itemBuilder: (context, index) {
-                final topic =
-                    document[index].data().toEntity(document[index].id);
-                dev.log(topic.topic.toString());
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.r),
-                    color: AppColor.blue,
-                  ),
-                  child: StreamBuilder<QuerySnapshot<QuizModel>>(
-                      stream: FirebaseFirestore.instance
-                          .collection('quiz')
-                          .where('topic', isEqualTo: topic.id)
-                          .withConverter(
-                            fromFirestore: (snapshot, options) =>
-                                QuizModel.fromJson(snapshot.data()!),
-                            toFirestore: (quiz, _) => quiz.toJson(),
-                          )
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        return ListTile(
-                          selectedTileColor: Colors.amber,
-                          title: Text(
-                            document[index].data().topic ?? '',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  color: Colors.white,
-                                ),
-                          ),
-                          trailing: Icon(
-                            Icons.arrow_right,
-                            size: 24.r,
-                            color: Colors.white,
-                          ),
-                          onTap: () {
-                            final document = (snapshot.data?.docs ?? []);
-                            document.shuffle(Random());
-                            final data = document
-                                .take(5)
-                                .map(
-                                  (e) => e.data().toEntity().copyWith(
-                                        id: e.id,
-                                      ),
-                                )
-                                .toList();
-                            context.pushNamed(
-                              RouterConstant.questionRouter,
-                              extra: QuizArgument(
-                                index: 0,
-                                listQuestion: data,
-                              ),
-                            );
-                          },
+      body: stateTopic.whenOrNull(
+        success: (data) => ListView.separated(
+          shrinkWrap: true,
+          padding: EdgeInsets.all(16.r),
+          itemBuilder: (context, index) => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.r),
+              color: AppColor.blue,
+            ),
+            child: ListTile(
+              selectedTileColor: Colors.amber,
+              title: Text(
+                data[index].topic ?? '',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
+              trailing: Icon(
+                Icons.arrow_right,
+                size: 24.r,
+                color: Colors.white,
+              ),
+              onTap: () async {
+                final id = data[index].id;
+                final quiz =
+                    await ref.read(quizNotifierProvider.notifier).getSearchQuiz(
+                          id: id,
                         );
-                      }),
-                );
+                quiz.shuffle(Random());
+                if (context.mounted) {
+                  context.pushNamed(
+                    RouterConstant.questionRouter,
+                    extra: QuizArgument(
+                      index: 0,
+                      listQuestion: quiz.take(5).toList(),
+                    ),
+                  );
+                }
               },
-              separatorBuilder: (context, index) => SizedBox(height: 8.h),
-              itemCount: document.length,
-            );
-          }),
+            ),
+          ),
+          separatorBuilder: (context, index) => SizedBox(height: 8.h),
+          itemCount: data.length,
+        ),
+      ),
     );
   }
 }

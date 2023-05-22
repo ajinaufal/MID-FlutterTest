@@ -28,7 +28,7 @@ List<GoRoute> get routes {
     GoRoute(
       name: RouterConstant.topicsRouter,
       path: '/topics',
-      builder: (context, state) => const TopicsView(),
+      builder: (context, state) => const TopicView(),
     ),
     GoRoute(
       name: RouterConstant.questionRouter,

@@ -15,7 +15,7 @@ class TopicModel with _$TopicModel {
 }
 
 extension TopicModelX on TopicModel {
-  TopicEntities toEntity(String? id) {
+  TopicEntities toEntity({String? id}) {
     return TopicEntities(
       topic: topic,
       id: id,

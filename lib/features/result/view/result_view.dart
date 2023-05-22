@@ -34,9 +34,7 @@ class _ResultViewState extends ConsumerState<ResultView> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            if (context.canPop()) {
-              context.pushNamed(RouterConstant.baseRouter);
-            }
+            if (context.canPop()) context.pushNamed(RouterConstant.baseRouter);
           },
           icon: Icon(
             Platform.isIOS

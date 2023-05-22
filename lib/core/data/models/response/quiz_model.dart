@@ -18,8 +18,9 @@ class QuizModel with _$QuizModel {
 }
 
 extension QuizModelX on QuizModel {
-  QuizEntities toEntity() {
+  QuizEntities toEntity({String? id}) {
     return QuizEntities(
+      id: id,
       image: image,
       question: question,
       topic: topic,
